@@ -46,4 +46,14 @@ while(shouldContinue()) {
 ```javascript 
 process.env.UV_THREADPOOL_SIZE 
 ```
-Node js tries to run code in async where it is possible but some operations are executed sync. such as all fs operations other than file watcher runs sync. above variable is an indication for libuv's threadpool to size threads 
+Node js tries to run code in async where it is possible but some operations are executed sync. such as all fs operations other than file watcher runs sync. above variable is an indication for libuv's threadpool to size threads
+
+## Cluster
+
+You can use the cluster option provided by node.
+
+Once code has been updated to create worker process and cluster manager you can do a benchmark test on mac os by running this command.
+This is using apache benchmark
+```sh
+  ab -c 50 -n 500 http://localhost:8000/
+```
