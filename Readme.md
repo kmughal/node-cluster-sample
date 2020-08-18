@@ -85,3 +85,12 @@ to kill all nodejs in mac use ```sh killall node```
 This is an experimental feature. The package can be installed by ```js npm i webworker-threads --s ```
 
 
+### Error Handling
+
+To handle uncaught exception use process.on("uncaughtException", callback);
+
+### process.nextTick vs setTimeout vs setImmediate
+
+- process.nextTrick will be placed at the end of the current cycle and it will run before the next cycle starts
+- setTimeout is  placed to the next timer queue
+- setImmediate is placed in the check queue of the next cycle of the event loop
