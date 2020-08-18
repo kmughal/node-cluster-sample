@@ -94,3 +94,122 @@ To handle uncaught exception use process.on("uncaughtException", callback);
 - process.nextTrick will be placed at the end of the current cycle and it will run before the next cycle starts
 - setTimeout is  placed to the next timer queue
 - setImmediate is placed in the check queue of the next cycle of the event loop
+
+### Small and quick references
+
+#### Event loops
+
+- All timers will run
+- Run all IO operations
+- Execution paused waiting for new events to happen
+- Check if callbacks related to timers are ready to end
+- Manage close events
+
+##### Catch uncaught exception
+```js
+process.on("onUncaughtException",cb)
+```
+
+##### process.nextTick vs setTimeout vs setImmediate
+
+- process.nextTick will run before the current cycle ends
+- setTimeout will be on the next timer queue
+- setImmediate will be on check queue of next cycle
+
+
+#### React hooks cheatsheet
+
+- useReducer is an alternative of useState, use for complex state management
+
+```jsx
+
+function reducer(state, action) {
+ switch (action.type) {
+ case 'increment':
+ return {count: state.count + 1};
+ case 'decrement':
+ return {count: state.count - 1};
+ default:
+ throw new Error();
+ }
+
+function Counter({initialState}) {
+ const [state, dispatch] = useReducer(reducer, initialState);
+ return (
+ <>
+ Count: {state.count}
+ <button onClick={() => dispatch({type: 'increment'})}>+</button>
+ <button onClick={() => dispatch({type: 'decrement'})}>+</button>
+ </>
+ );
+```
+- useEffect is equal to componentDidMount ,componentDidUpdate and componentWillUnmount, if you 2nd argument is not passed then it will be called for each render and if 2nd argument is an empty array it will be called only once.
+
+ useContext() 
+```jsx
+
+const data = [];
+
+const DataContext = React.createContext(data)
+
+const App = () => <DataContext.Provider value={data}>
+<Child/>
+</DataContext.Provider>
+
+
+const Child = () => {
+
+ const data = React.useContext(DataContext)
+ 
+return (...)
+};
+````
+
+- useMemo creates a memo component, optimization happens by the deps passed, if no deps are passed it will re-calc for each render. Dont use useEffect or any side effects
+
+- useRef to create a ref
+
+- useImperativeHandle customize the exposed interface of a component, allows you to call child exposed methods in the parent.
+
+```jsx
+function TextInput(props, ref) {
+ const inputRef = useRef(null);
+ const onBtnClick = () => inputRef.current.focus();
+ useImperativeHandle(ref, () => ({
+ focusInput: () => inputRef.current.focus();
+ });
+ return (
+ <Fragment>
+ <input ref={inputRef} />
+ <button onClick={onBtnClick}>Focus the text input</button>
+ </Fragment>
+ )
+}
+
+const TextInputWithRef = React.forwardRef(TextInput);
+
+function Parent() {
+ const ref = useRef(null);
+ useEffect(() => {
+ ref.focusInput();
+ }, []);
+ return (
+ <div>
+ <TextInputWithRef ref={ref} />
+ </div>
+ );
+}
+````
+
+- useLayoutEffect signature same as useEffect, difference is that it happens after DOM is ready. you can sync read / write dom
+
+- useDebugValue is used to display a label in devtool
+
+
+Hooks rules
+
+- Dont call hooks in loop, condition or nested function
+- Call hooks from React functions
+
+
+
